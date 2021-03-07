@@ -1,0 +1,16 @@
+"""
+В. Горевой (50%)
+Д. Бричеев (50%)
+"""
+import urllib.request
+
+with open('input.txt') as f_i:
+    with open("output.txt", "w") as f_o:
+        for url in f_i:
+            html = str(urllib.request.urlopen(url).read())
+            part_name = html.find("nfl-c-player-header__title")
+            name = html[html.find('>', part_name) + 1: html.find('</h1', part_name)]
+            stats = html[html.find('<tfoot>'): html.find('</tfoot>')].replace(' ', '').split('\\n')
+            COMP, ATT, YDS, TD, INT, PR = stats[14], stats[11], stats[20], stats[29], stats[32], stats[50]
+            f_o.write('{:<20s}{:<7s}{:<7s}{:<7s}{:<7s}{:<7s}{:<7.2f}\n'
+                      .format(name, COMP, ATT, YDS, TD, INT, float(PR)))
